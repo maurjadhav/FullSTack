@@ -67,7 +67,7 @@ stages:
             displayName: 'Run Trivy Scan for frontend'
             inputs:
               script: |
-                trivy image --format template --template "**/junit.tpl" -o trivy-results.xml $(imageNameFrontend):$(tag)
+                trivy image --format junit --template "**/junit.tpl" -o trivy-results.xml $(imageNameFrontend):$(tag)
 #                wget https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/junit.tpl -O junit.tpl
 #                trivy image --format junit -o trivy-results.xml $(imageNameFrontend):$(tag)
 
