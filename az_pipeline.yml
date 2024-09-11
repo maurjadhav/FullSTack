@@ -11,35 +11,35 @@ variables:
   tag: 470
 
 stages:
-  - stage: Build
-    displayName: BuildAndPushIimages
-    pool:
-      name: default
-    #  vmImage: ubuntu-latest
-    jobs:
-      - job: BuildImagesForBackend
-        displayName: BuildImagesForBackend
-        steps:
-          - task: Docker@2
-            displayName: 'Build docker image and push to repository'
-            inputs:
-              command: buildAndPush
-              Dockerfile: './backend/Dockerfile'
-              containerRegistry: 'DockerHub'
-              repository: 'mrjadhav/full_stack_backend'
-              tags: '$(Build.BuildId)'
-
-      - job: BuildImagesForFrontend
-        displayName: BuildImagesForFrontend
-        steps:
-          - task: Docker@2
-            displayName: 'Build docker image and push to repository'
-            inputs:
-              command: buildAndPush
-              Dockerfile: './frontend/Dockerfile'
-              containerRegistry: 'DockerHub'
-              repository: 'mrjadhav/full_stack_frontend'
-              tags: '$(Build.BuildId)'
+#  - stage: Build
+#    displayName: BuildAndPushIimages
+#    pool:
+#      name: default
+#    #  vmImage: ubuntu-latest
+#    jobs:
+#      - job: BuildImagesForBackend
+#        displayName: BuildImagesForBackend
+#        steps:
+#          - task: Docker@2
+#            displayName: 'Build docker image and push to repository'
+#            inputs:
+#              command: buildAndPush
+#              Dockerfile: './backend/Dockerfile'
+#              containerRegistry: 'DockerHub'
+#              repository: 'mrjadhav/full_stack_backend'
+#              tags: '$(Build.BuildId)'
+#
+#      - job: BuildImagesForFrontend
+#        displayName: BuildImagesForFrontend
+#        steps:
+#          - task: Docker@2
+#            displayName: 'Build docker image and push to repository'
+#            inputs:
+#              command: buildAndPush
+#              Dockerfile: './frontend/Dockerfile'
+#              containerRegistry: 'DockerHub'
+#              repository: 'mrjadhav/full_stack_frontend'
+#              tags: '$(Build.BuildId)'
    
   - stage: DockerImageScanUsingTrivy
     displayName: DockerImageScanUsingTrivy
