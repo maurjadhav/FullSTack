@@ -14,7 +14,8 @@ stages:
   - stage: Build
     displayName: BuildAndPushIimages
     pool:
-      vmImage: ubuntu-latest
+      name: default
+    #  vmImage: ubuntu-latest
     jobs:
       - job: BuildImagesForBackend
         displayName: BuildImagesForBackend
@@ -43,11 +44,11 @@ stages:
   - stage: DockerImageScanUsingTrivy
     displayName: DockerImageScanUsingTrivy
     pool:
-      vmImage: ubuntu-latest
+      name: default
     dependsOn: Build
     jobs:
       - job: TrivyInstallation
-        displayName: TBrivyBackendImageScan
+        displayName: TrivyInstallation
         steps:
           - task: CmdLine@2
             displayName: 'Install Trivy'
@@ -60,7 +61,7 @@ stages:
                 sudo apt-get install trivy
       
       - job: DockerImageScan
-        displayName: TBackendImageScan
+        displayName: DockerImageScan
         steps:
           - task: CmdLine@2
             displayName: 'Run Trivy Scan for frontend'
