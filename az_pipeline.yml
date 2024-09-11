@@ -67,7 +67,7 @@ stages:
             displayName: 'Run Trivy Scan for frontend'
             inputs:
               script: |
-                trivy image  $(imageNameFrontend):$(tag)
+                trivy image --format junit -o trivy-results.xml $(imageNameFrontend):$(tag)
 
 #          - task: CmdLine@2
 #            displayName: 'Run Trivy Scan for backend'
