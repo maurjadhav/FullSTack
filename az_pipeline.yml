@@ -67,13 +67,14 @@ stages:
             displayName: 'Run Trivy Scan for frontend'
             inputs:
               script: |
-                trivy image --format junit -o trivy-results.xml $(imageNameFrontend):$(tag)
+                trivy image --format junit -o trivy-frontend-results.json $(imageNameFrontend):$(tag)
+                xsltproc transformation.xsl junit_results.xml -o transformed_results.xml
 
-          - task: CmdLine@2
-            displayName: 'Run Trivy Scan for backend'
-            inputs:
-              script: |
-                trivy image --format junit -o trivy-results.xml $(imageNameBacktend):$(tag)
+#          - task: CmdLine@2
+#            displayName: 'Run Trivy Scan for backend'
+#            inputs:
+#              script: |
+#                trivy image --format json -o trivy-results.xml $(imageNameBacktend):$(tag)
 
           - task: PublishTestResults@2
             displayName: 'Publish Trivy Scan Results'
