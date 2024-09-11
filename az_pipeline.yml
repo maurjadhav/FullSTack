@@ -7,16 +7,17 @@ pr:
 variables:
   imageNameBacktend: 'mrjadhav/full_stack_backend'
   imageNameFrontend: 'mrjadhav/full_stack_frontend'     # This is repos name
-  tag: '$(Build.BuildId)'
+#  tag: '$(Build.BuildId)'
+  tag: 470
 
 stages:
   - stage: Build
-    displayName: Build and push image
+    displayName: BuildAndPushIimages
     pool:
       vmImage: ubuntu-latest
     jobs:
       - job: BuildImagesForBackend
-        displayName: Build images for backend
+        displayName: BuildImagesForBackend
         steps:
           - task: Docker@2
             displayName: 'Build docker image and push to repository'
@@ -28,7 +29,7 @@ stages:
               tags: '$(Build.BuildId)'
 
       - job: BuildImagesForFrontend
-        displayName: Build images for frontend
+        displayName: BuildImagesForFrontend
         steps:
           - task: Docker@2
             displayName: 'Build docker image and push to repository'
@@ -39,14 +40,14 @@ stages:
               repository: 'mrjadhav/full_stack_frontend'
               tags: '$(Build.BuildId)'
    
-  - stage: DockerImageScan
-    displayName: Scannig the docker images
+  - stage: DockerImageScanUsingTrivy
+    displayName: DockerImageScanUsingTrivy
     pool:
       vmImage: ubuntu-latest
     dependsOn: Build
     jobs:
-      - job: BackendScan
-        displayName: BackendImageScan
+      - job: TrivyInstallation
+        displayName: TBrivyBackendImageScan
         steps:
           - task: CmdLine@2
             displayName: 'Install Trivy'
@@ -57,7 +58,10 @@ stages:
                 echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
                 sudo apt-get update
                 sudo apt-get install trivy
-
+      
+      - job: DockerImageScan
+        displayName: TBackendImageScan
+        steps:
           - task: CmdLine@2
             displayName: 'Run Trivy Scan for frontend'
             inputs:
