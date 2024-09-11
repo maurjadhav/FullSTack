@@ -45,7 +45,7 @@ stages:
     displayName: DockerImageScanUsingTrivy
     pool:
       name: default
-    dependsOn: Build
+#    dependsOn: Build
     jobs:
 #      - job: TrivyInstallation
 #        displayName: TrivyInstallation
