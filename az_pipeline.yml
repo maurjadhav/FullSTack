@@ -1,30 +1,63 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
+---
 trigger: none
-pr:
-- develop
 
-resources:
-- repo: self
+pr:
+  - develop
 
 variables:
   tag: '$(Build.BuildId)'
 
 stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
+#  - stage: Build
+#    displayName: Build and push image
+#    pool:
+#      vmImage: ubuntu-latest
+#    jobs:
+#      - job: BuildImagesForBackend
+#        displayName: Build images for backend
+#        steps:
+#          - task: Docker@2
+#            displayName: 'Build docker image and push to repository'
+#            inputs:
+#              command: buildAndPush
+#              Dockerfile: './backend/Dockerfile'
+#              containerRegistry: 'DockerHub'
+#              repository: 'mrjadhav/full_stack_backend'
+#              tags: '$(Build.BuildId)'
+#
+#      - job: BuildImagesForFrontend
+#        displayName: Build images for frontend
+#        steps:
+#          - task: Docker@2
+#            displayName: 'Build docker image and push to repository'
+#            inputs:
+#              command: buildAndPush
+#              Dockerfile: './frontend/Dockerfile'
+#              containerRegistry: 'DockerHub'
+#              repository: 'mrjadhav/full_stack_frontend'
+#              tags: '$(Build.BuildId)'
+   
+
+  - stage: TestStage
+    displayName: Running Tests
     pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/backend/Dockerfile'
-        tags: |
-          $(tag)
+      vmImage: windows-latest
+#    dependsOn: []
+    jobs:    
+      - job: RunningApplication
+        displayName: Running Application
+        steps:
+          - powershell: |  
+              # Install Docker Desktop
+              choco install docker-desktop -y
+            displayName: Installing DockerDesktop
+          
+          - powershell: |
+              # Start Docker Desktop
+              Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe" -WindowStyle Minimized
+            displayName: Starting the DockerDesktop
+
+          - powershell: |
+              # Run Docker Compose
+              docker compose up -d
+            displayName: Running docker compose file
