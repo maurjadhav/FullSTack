@@ -44,22 +44,21 @@ stages:
   - stage: DockerImageScanUsingTrivy
     displayName: DockerImageScanUsingTrivy
     pool:
-      vmImage: ubuntu-latest
-#      name: default
+      name: default
 #    dependsOn: Build
     jobs:
-      - job: TrivyInstallation
-        displayName: TrivyInstallation
-        steps:
-          - task: CmdLine@2
-            displayName: 'Install Trivy'
-            inputs:
-              script: |
-                sudo apt-get install wget apt-transport-https gnupg lsb-release
-                wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-                echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-                sudo apt-get update
-                sudo apt-get install trivy
+#      - job: TrivyInstallation
+#        displayName: TrivyInstallation
+#        steps:
+#          - task: CmdLine@2
+#            displayName: 'Install Trivy'
+#            inputs:
+#              script: |
+#                sudo apt-get install wget apt-transport-https gnupg lsb-release
+#                wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+#                echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+#                sudo apt-get update
+#                sudo apt-get install trivy
       
       - job: DockerImageScan
         displayName: DockerImageScan
@@ -68,7 +67,11 @@ stages:
             displayName: 'Run Trivy Scan for frontend'
             inputs:
               script: |
-                trivy image $(imageNameFrontend):$(tag)
+                trivy image --format template --template "@/usr/local/share/trivy/templates/html.tpl" -o report.html $(imageNameFrontend):$(tag)
+
+#                trivy image $(imageNameFrontend):$(tag)
+#                # Fail the task if there is any HIGH and ,CRITICAL severity
+#                trivy image --severity HIGH,CRITICAL --exit-code 1 $(imageNameFrontend):$(tag)
 
 #          - task: CmdLine@2
 #            displayName: 'Run Trivy Scan for backend'
@@ -76,14 +79,14 @@ stages:
 #              script: |
 #                trivy image --format json -o trivy-results.xml $(imageNameBacktend):$(tag)
 
-          - task: PublishTestResults@2
-            displayName: 'Publish Trivy Scan Results'
-            inputs:
-              testResultsFormat: 'JUnit'
-              testResultsFiles: '**/trivy-results.xml'
+#          - task: PublishTestResults@2
+#            displayName: 'Publish Trivy Scan Results'
+#            inputs:
+#              testResultsFormat: 'JUnit'
+#              testResultsFiles: '**/trivy-results.xml'
 #              mergeTestResults: true
 #              failTaskOnFailedTests: true
-              testRunTitle: 'Trivy - Vulnerabilities Summary'
+#              testRunTitle: 'Trivy - Vulnerabilities Summary'
 
 
 
