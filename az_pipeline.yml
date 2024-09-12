@@ -7,27 +7,27 @@ pr:
 variables:
   imageNameBacktend: 'mrjadhav/full_stack_backend'
   imageNameFrontend: 'mrjadhav/full_stack_frontend'     # This is repos name
-#  tag: '$(Build.BuildId)'
-  tag: 470
+  tag: '$(Build.BuildId)'
+#  tag: 472
 
 stages:
-#  - stage: Build
-#    displayName: BuildAndPushIimages
-#    pool:
-#      name: default
-#    #  vmImage: ubuntu-latest
-#    jobs:
-#      - job: BuildImagesForBackend
-#        displayName: BuildImagesForBackend
-#        steps:
-#          - task: Docker@2
-#            displayName: 'Build docker image and push to repository'
-#            inputs:
-#              command: buildAndPush
-#              Dockerfile: './backend/Dockerfile'
-#              containerRegistry: 'DockerHub'
-#              repository: 'mrjadhav/full_stack_backend'
-#              tags: '$(Build.BuildId)'
+  - stage: Build
+    displayName: BuildAndPushIimages
+    pool:
+      name: default
+    #  vmImage: ubuntu-latest
+    jobs:
+      - job: BuildImagesForBackend
+        displayName: BuildImagesForBackend
+        steps:
+          - task: Docker@2
+            displayName: 'Build docker image and push to repository'
+            inputs:
+              command: buildAndPush
+              Dockerfile: './backend/Dockerfile'
+              containerRegistry: 'GitHub'
+              repository: 'maurjadhav/FullSTack'
+              tags: '$(Build.BuildId)'
 #
 #      - job: BuildImagesForFrontend
 #        displayName: BuildImagesForFrontend
